@@ -65,17 +65,39 @@ func realMain() error {
 	}
 	fmt.Printf(asset.Symbol)
 
-	/*assetKey := ""
-	ordert := alpaca.OrderType.Market
-	orderReq := alpaca.PlaceOrderRequest{
-		AccountID: "",
-		AssetKey:  &assetKey,
-		Qty:       decimal.New(1, 1),
-		Side:      "buy",
-		Type:      "market",
-		//TimeInForce: ,
-	}
-	alpacaClient.client.PlaceOrder()*/
+	/*
+		// order code hasn't been ran yet
+		assetKey := ""
+		limitPrice := decimal.New(1000, 1)
+		stopPrice := decimal.New(10000, 1)
+		takeProfit := alpaca.TakeProfit{
+			LimitPrice: &limitPrice,
+		}
+		stopLoss := alpaca.StopLoss{
+			LimitPrice: &limitPrice,
+			StopPrice:  &stopPrice,
+		}
+		// todo(kfcampbell): figure out how best to strongly-type these string values
+		orderReq := alpaca.PlaceOrderRequest{
+			AccountID:     "",
+			AssetKey:      &assetKey,
+			Qty:           decimal.New(1, 1),
+			Side:          "buy",
+			Type:          "market",
+			TimeInForce:   "day",
+			LimitPrice:    &limitPrice,
+			StopPrice:     &stopPrice,
+			ClientOrderID: "",
+			OrderClass:    "simple",
+			TakeProfit:    &takeProfit,
+			StopLoss:      &stopLoss,
+		}
+		order, err := alpacaClient.Client.PlaceOrder(orderReq)
+		if err != nil {
+			return err
+		}
+		fmt.Printf("order: %v\n", order)
+	*/
 
 	// list orders
 	status, until, limit := "open", time.Now(), 100
