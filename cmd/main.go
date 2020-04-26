@@ -46,16 +46,16 @@ func realMain() error {
 		"CAT", "MSFT", "PANW", "OKTA", "TWTR", "TM",
 		"RTN", "ATVI", "GS", "BAC", "MS", "TWLO", "QCOM"}
 	for _, stock := range stockList {
-		allStocks = append(allStocks, bazaar.StockField{stock, 0})
+		allStocks = append(allStocks, bazaar.NewStockField(stock, 0))
 	}
 
-	alpacaClient := bazaar.ClientContainer{
+	alpacaClient := bazaar.NewClientContainer(
 		alpaca.NewClient(common.Credentials()),
-		bazaar.Bucket{[]string{}, -1, -1, 0},
-		bazaar.Bucket{[]string{}, -1, -1, 0},
+		bazaar.NewBucket([]string{}, -1, -1, 0),
+		bazaar.NewBucket([]string{}, -1, -1, 0),
 		make([]bazaar.StockField, len(allStocks)),
 		[]string{},
-	}
+	)
 
 	copy(alpacaClient.AllStocks, allStocks)
 
