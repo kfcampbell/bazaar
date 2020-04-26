@@ -9,28 +9,11 @@ import (
 	"github.com/alpacahq/alpaca-trade-api-go/alpaca"
 	"github.com/alpacahq/alpaca-trade-api-go/common"
 	"github.com/joho/godotenv"
+	"github.com/kfcampbell/bazaar/bazaar"
 )
 
-type alpacaClientContainer struct {
-	client    *alpaca.Client
-	long      bucket
-	short     bucket
-	allStocks []stockField
-	blacklist []string
-}
-type bucket struct {
-	list        []string
-	qty         int
-	adjustedQty int
-	equityAmt   float64
-}
-type stockField struct {
-	name string
-	pc   float64
-}
-
 // make sure there's only one instance of the trading client
-var alpacaClient alpacaClientContainer
+var alpacaClient bazaar.ClientContainer
 
 func main() {
 	if err := realMain(); err != nil {
@@ -57,26 +40,26 @@ func realMain() error {
 		os.Setenv(common.EnvApiSecretKey, apiKeySecret)
 	}
 
-	allStocks := []stockField{}
+	allStocks := []bazaar.StockField{}
 	stockList := []string{"DOMO", "TLRY", "SQ", "MRO", "AAPL", "GM", "SNAP",
 		"SHOP", "SPLK", "BA", "AMZN", "SUI", "SUN", "TSLA", "CGC", "SPWR", "NIO",
 		"CAT", "MSFT", "PANW", "OKTA", "TWTR", "TM",
 		"RTN", "ATVI", "GS", "BAC", "MS", "TWLO", "QCOM"}
 	for _, stock := range stockList {
-		allStocks = append(allStocks, stockField{stock, 0})
+		allStocks = append(allStocks, bazaar.StockField{stock, 0})
 	}
 
-	alpacaClient := alpacaClientContainer{
+	alpacaClient := bazaar.ClientContainer{
 		alpaca.NewClient(common.Credentials()),
-		bucket{[]string{}, -1, -1, 0},
-		bucket{[]string{}, -1, -1, 0},
-		make([]stockField, len(allStocks)),
+		bazaar.Bucket{[]string{}, -1, -1, 0},
+		bazaar.Bucket{[]string{}, -1, -1, 0},
+		make([]bazaar.StockField, len(allStocks)),
 		[]string{},
 	}
 
-	copy(alpacaClient.allStocks, allStocks)
+	copy(alpacaClient.AllStocks, allStocks)
 
-	asset, err := alpacaClient.client.GetAsset("MSFT")
+	asset, err := alpacaClient.Client.GetAsset("MSFT")
 	if err != nil {
 		return err
 	}
@@ -96,7 +79,7 @@ func realMain() error {
 
 	// list orders
 	status, until, limit := "open", time.Now(), 100
-	orders, _ := alpacaClient.client.ListOrders(&status, &until, &limit, nil)
+	orders, _ := alpacaClient.Client.ListOrders(&status, &until, &limit, nil)
 	for _, order := range orders {
 		fmt.Printf("order: %v\n", order)
 	}

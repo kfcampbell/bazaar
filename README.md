@@ -8,8 +8,12 @@ This repo holds some rudimentary experiments with paper stock trading using alpa
 - Generate a paper trading ID and secret
 - Clone the repo
 - Populate an `.env` file in the repo root with your `API_KEY_ID` and `API_KEY_SECRET` values
-- Run `go run main.go` in the repo root
+- Run `go run cmd/main.go` from the repo root
     - Alternately, you can `Run and Debug` in VSCode
+
+## Todo
+
+- Successfully place an order
 - ???
 - Lose money
 
